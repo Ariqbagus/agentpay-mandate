@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgentPay Mandate — AI agent payments with on-chain limits</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>AgentPay Mandate</h1>
+  <p class="sub">An AI agent that pays tUSD8 invoices — but only inside a mandate the contract itself enforces:
+     a total cap, a per-payment cap, a payee allowlist and an expiry. The agent signs, a relayer submits,
+     the owner can revoke instantly.</p>
+  <p id="conn" class="conn">loading…</p>
+</header>
+
+<main>
+  <section id="setup-card" class="card hidden">
+    <h2>1. Create a mandate</h2>
+    <p>The owner sets the rules and funds the mandate. Funding is gasless: the owner signs an
+       EIP-3009 authorization and a relayer submits it.</p>
+    <form id="setup-form">
+      <label>Total cap (tUSD8) <input name="totalCap" type="number" step="0.01" min="0" value="100" required></label>
+      <label>Per-payment cap (tUSD8) <input name="perPaymentCap" type="number" step="0.01" min="0" value="40" required></label>
+      <label>Fund amount (tUSD8) <input name="fundAmount" type="number" step="0.01" min="0" value="100" required></label>
+      <label>Expires in (hours) <input name="expiryHours" type="number" step="1" min="1" value="168" required></label>
+      <label>Allowed payees (one address per line)
+        <textarea name="payees" rows="3">0x90F79bf6EB2c4f870365E785982E1f101E93b906
+0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65</textarea></label>
+      <button type="submit">Create &amp; fund mandate</button>
+    </form>
+  </section>
+
+  <section id="mandate-card" class="card hidden">
+    <h2>Mandate <span id="m-status" class="badge"></span></h2>
+    <dl class="grid">
+      <div><dt>Contract</dt><dd id="m-address" class="mono"></dd></div>
+      <div><dt>Agent</dt><dd id="m-agent" class="mono"></dd></div>
+      <div><dt>Total cap</dt><dd id="m-total"></dd></div>
+      <div><dt>Per-payment cap</dt><dd id="m-perpay"></dd></div>
+      <div><dt>Spent</dt><dd id="m-spent"></dd></div>
+      <div><dt>Remaining</dt><dd id="m-remaining"></dd></div>
+      <div><dt>Balance held</dt><dd id="m-balance"></dd></div>
+      <div><dt>Expires</dt><dd id="m-expiry"></dd></div>
+    </dl>
+    <div class="bar"><div id="m-bar"></div></div>
+    <p class="row">
+      <button id="revoke-btn" class="danger">Revoke mandate (stops the agent instantly)</button>
+    </p>
+    <form id="payee-form" class="inline">
+      <input name="address" placeholder="0x… payee to allow" size="46" required>
+      <button type="submit">Add payee</button>
+    </form>
+    <p class="hint">Allowlist: <span id="m-payees" class="mono"></span></p>
+  </section>
+
+  <section id="invoice-card" class="card hidden">
+    <h2>2. Invoices for the agent</h2>
+    <form id="invoice-form">
+      <label>Payee address <input name="payee" placeholder="0x…" required></label>
+      <label>Amount (tUSD8) <input name="amount" type="number" step="0.01" min="0" value="25" required></label>
+      <label>Memo <input name="memo" placeholder="e.g. Studio rent — November"></label>
+      <button type="submit">Add invoice</button>
+    </form>
+    <table>
+      <thead><tr><th>Invoice</th><th>Payee</th><th>Amount</th><th>Memo</th><th>Status</th><th></th></tr></thead>
+      <tbody id="invoice-rows"></tbody>
+    </table>
+  </section>
+
+  <section id="audit-card" class="card hidden">
+    <h2>On-chain audit trail</h2>
+    <p class="hint">Every payment below is an <span class="mono">InvoicePaid</span> event emitted by the mandate contract.</p>
+    <table>
+      <thead><tr><th>Invoice id</th><th>Payee</th><th>Amount</th><th>Tx</th></tr></thead>
+      <tbody id="payment-rows"></tbody>
+    </table>
+  </section>
+
+  <p id="toast" class="toast hidden"></p>
+</main>
+
+<footer>
+  <p>AgentPay Mandate · Aevum Builder Challenge · testnet only, no real funds.
+     Local demo runs on anvil (Shanghai hardfork, chain 44005) with a mock tUSD8.</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

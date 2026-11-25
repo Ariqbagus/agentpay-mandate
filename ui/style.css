@@ -1,0 +1,30 @@
+:root { color-scheme: light dark; --accent: #5b5bd6; --bad: #c0392b; --ok: #1e8449; }
+* { box-sizing: border-box; }
+body { font-family: system-ui, sans-serif; margin: 0 auto; max-width: 880px; padding: 24px 16px 48px; line-height: 1.45; }
+h1 { margin-bottom: 4px; }
+.sub { margin-top: 0; opacity: .85; }
+.conn { font-size: .9em; opacity: .7; }
+.card { border: 1px solid color-mix(in srgb, currentColor 20%, transparent); border-radius: 12px; padding: 16px 20px; margin: 18px 0; }
+.hidden { display: none !important; }
+label { display: block; margin: 10px 0; font-size: .92em; }
+input, textarea { width: 100%; padding: 7px 9px; margin-top: 3px; border-radius: 7px; border: 1px solid color-mix(in srgb, currentColor 30%, transparent); background: transparent; color: inherit; font: inherit; }
+form.inline { display: flex; gap: 8px; } form.inline input { flex: 1; }
+button { background: var(--accent); color: #fff; border: 0; border-radius: 8px; padding: 8px 14px; font: inherit; cursor: pointer; }
+button.danger { background: var(--bad); }
+button.small { padding: 4px 10px; font-size: .88em; }
+button:disabled { opacity: .5; cursor: wait; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 6px 18px; }
+.grid dt { font-size: .8em; opacity: .65; } .grid dd { margin: 0 0 8px; font-weight: 600; }
+.mono { font-family: ui-monospace, monospace; font-size: .82em; word-break: break-all; }
+.bar { height: 10px; border-radius: 6px; background: color-mix(in srgb, currentColor 15%, transparent); overflow: hidden; margin: 8px 0; }
+.bar > div { height: 100%; background: var(--accent); width: 0; transition: width .3s; }
+.badge { font-size: .62em; vertical-align: middle; padding: 3px 9px; border-radius: 99px; background: var(--ok); color: #fff; }
+.badge.off { background: var(--bad); }
+table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: .92em; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid color-mix(in srgb, currentColor 14%, transparent); vertical-align: top; }
+.status-paid { color: var(--ok); font-weight: 600; }
+.status-rejected { color: var(--bad); font-weight: 600; }
+.reason { display: block; font-weight: 400; font-size: .86em; opacity: .85; max-width: 340px; }
+.hint { font-size: .88em; opacity: .75; }
+.toast { position: sticky; bottom: 12px; background: var(--accent); color: #fff; padding: 10px 14px; border-radius: 9px; }
+footer { opacity: .65; font-size: .88em; margin-top: 28px; }
