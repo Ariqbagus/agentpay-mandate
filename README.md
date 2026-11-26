@@ -109,10 +109,10 @@ node agent.mjs revoke
   revocation a further invoice rejected. Final on-chain state: spent 55,
   remaining 45.
 
-## Deploy to Aevum Testnet (remaining steps)
+## Deploy to Aevum Testnet — DONE (live 26 Nov 2026)
 
-Everything below is ready to run; it is waiting on testnet funds, which only
-the project owner can claim (the Discord faucet is bound to their account).
+All steps below were executed on 26 Nov 2026; the mandate is live on Aevum
+Testnet with real tUSD8. The process is kept here as the runbook.
 
 1. **Claim faucet funds** (owner only): join the QDay Discord, verify
    (✅ in `#verify`), then `/faucet <deployer-address>` in `#faucet` →
@@ -142,11 +142,30 @@ the project owner can claim (the Discord faucet is bound to their account).
 
 | Item | Value |
 |---|---|
-| AgentMandate (Aevum Testnet) | _to be filled at deploy_ |
-| Deploy tx | _to be filled at deploy_ |
-| Funding tx | _to be filled at deploy_ |
-| Sample payment tx(s) | _to be filled at deploy_ |
-| Deployed commit | _git commit hash of this repo at deploy time_ |
+| AgentMandate (Aevum Testnet) | [0xc1f2E27847Ac51B71AD638756bFBa0b77Ce2C8Ea](https://explorer-test.qday.info/address/0xc1f2E27847Ac51B71AD638756bFBa0b77Ce2C8Ea) |
+| Deploy tx | [0x28a0a0d26b56d5a03b0d2b6a7a40be5a4a6b5a6d2da8021f1a5c56d40ee2a54b](https://explorer-test.qday.info/tx/0x28a0a0d26b56d5a03b0d2b6a7a40be5a4a6b5a6d2da8021f1a5c56d40ee2a54b) |
+| Funding tx | [0x454b0034940b14773898dc16023f9c80d195f32064da2409977c7d7ccd87b98e](https://explorer-test.qday.info/tx/0x454b0034940b14773898dc16023f9c80d195f32064da2409977c7d7ccd87b98e) — 5 tUSD8, gasless EIP-3009: owner signed off-chain, relayer submitted |
+| Sample payment tx(s) | [0xfc7b06dc2e1996a3a83df0b760d2b4d108b30795daa9b25525929ffa9fddfade](https://explorer-test.qday.info/tx/0xfc7b06dc2e1996a3a83df0b760d2b4d108b30795daa9b25525929ffa9fddfade) — 1.5 tUSD8 to `0x90F79bf6EB2c4f870365E785982E1f101E93b906`, `InvoicePaid` event on-chain |
+| Deployed commit | `9fcf7096e0559124d00195e4239947acacebf5af` (GitHub repo commit of this code; the local working copy is not a git checkout) |
+
+**Live testnet evidence (26 Nov 2026), all read back from the chain:**
+
+- Mandate parameters verified on-chain: owner
+  `0x659e41A546848Dd3F9930ea5Cbd31467991DcBFd`, agent
+  `0x2C92933d83f2D2B1B897127902b167596c75a364`, total cap 5 tUSD8,
+  per-payment cap 2 tUSD8, expiry 2026-12-26 05:43 UTC (30 days), both demo
+  payees allowlisted, `isActive() = true`, `revoked() = false`.
+- Funding: the full 5 tUSD8 faucet amount was pulled into the mandate by a
+  relayed EIP-3009 authorization (funding tx above); the owner wallet sent no
+  funding transaction and its tUSD8 balance is 0 afterwards.
+- Payment: invoice INV-T001 of 1.5 tUSD8 was paid by a relayed,
+  agent-signed EIP-712 order (payment tx above; Transfer + InvoicePaid logs
+  verified in the receipt). Mandate state afterwards: spent 1.5, remaining
+  3.5, agent nonce 1.
+- Rejection: a validly signed order for 3 tUSD8 (invoice INV-T002, over the
+  2 tUSD8 per-payment cap) reverts on-chain with `OverPerPaymentCap`
+  (verified by `eth_call` simulation against the live contract); the agent
+  records it as rejected with that plain-language reason.
 
 ## Layout
 
